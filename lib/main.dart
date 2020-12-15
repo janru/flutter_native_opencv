@@ -85,6 +85,43 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<void> takeImageAndRectify() async {
+    final image = await ImagePicker.pickImage(source: ImageSource.gallery, imageQuality: 100);
+    if (image == null) {
+      return;
+    }
+
+    setState(() {
+      _isWorking = true;
+    });
+
+    // Creating a port for communication with isolate and arguments for entry point
+    final port = ReceivePort();
+    final args = ProcessImageArguments(image.path, tempPath);
+
+    // Spawning an isolate
+    Isolate.spawn<ProcessImageArguments>(
+        createRectifiedImage,
+        args,
+        onError: port.sendPort,
+        onExit: port.sendPort
+    );
+
+    // Making a variable to store a subscription in
+    StreamSubscription sub;
+
+    // Listeting for messages on port
+    sub = port.listen((_) async {
+      // Cancel a subscription after message received called
+      await sub?.cancel();
+
+      setState(() {
+        _isProcessed = true;
+        _isWorking = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,6 +153,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 RaisedButton(
                   child: Text('Process photo'),
                   onPressed: takeImageAndProcess
+                ),
+                RaisedButton(
+                    child: Text('Rectify photo'),
+                    onPressed: takeImageAndRectify
                 )
               ],
             ),
