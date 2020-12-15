@@ -9,3 +9,8 @@ Read the full article here: https://medium.com/flutter-community/integrating-c-l
    - `opencv2.framework` to `native_opencv/ios`
    - `OpenCV-android-sdk/sdk/native/jni/include` to `native_opencv`
    - Contents of `OpenCV-android-sdk/sdk/native/libs/**` to `native_opencv/android/src/main/jniLibs/**`
+
+# Aruco
+aruco markers require opencv-contrib. This can be found here: https://pullrequest.opencv.org/buildbot/export/opencv_releases/master-contrib_pack-contrib-android/
+
+also for ios, see: https://pullrequest.opencv.org/buildbot/export/opencv_releases/
