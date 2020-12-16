@@ -61,6 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // Creating a port for communication with isolate and arguments for entry point
     final port = ReceivePort();
     final args = ProcessImageArguments(image.path, tempPath);
+    print('loading image from path ${image.path}');
     
     // Spawning an isolate
     Isolate.spawn<ProcessImageArguments>(
